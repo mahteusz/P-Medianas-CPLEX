@@ -13,20 +13,20 @@ int main(int argc, char** argv) {
 	if (!file) {
 		cerr << "Erro na leitura do arquivo!!!" << endl;
 	}
-	file >> c; //Matriz de custos ou distâncias
-	file >> P; //Número de medianas
+	file >> c; //Matriz de custos ou distÃ¢ncias
+	file >> P; //NÃºmero de medianas
 	IloInt N = c.getSize(); //Tamanho da matriz
 	
 	try {
 		IloModel myModel(env);
 		
-		//Declarando a matriz de alocação
+		//Declarando a matriz de alocaÃ§Ã£o
 		IloArray<IloNumVarArray> x(env, N);
 		for (int i = 0;i < N;i++) {
 			x[i] = IloNumVarArray(env, N, 0, 1, ILOINT);
 		}
 
-		//Declarando a Função Objetivo
+		//Declarando a FunÃ§Ã£o Objetivo
 		IloExpr funcaoObjetivo(env);
 		for (int i = 0;i < N;i++) {
 			for (int j = 0;j < N;j++) {
@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 		//adicionando a FO ao modelo
 		myModel.add(IloMinimize(env, funcaoObjetivo));
 
-		//Restrição 1
+		//RestriÃ§Ã£o 1
 		IloExpr r1(env);
 		for (int i = 0;i < N;i++) {
 			r1 += x[i][i];
@@ -44,14 +44,14 @@ int main(int argc, char** argv) {
 		myModel.add(r1 == P);
 		r1.end();
 
-		//Restrição 2
+		//RestriÃ§Ã£o 2
 		for (int i = 0;i < N;i++) {
 			for (int j = 0;j < N;j++) {
 				myModel.add(x[i][j] <= x[j][j]);
 			}
 		}
 
-		//Restrição 3
+		//RestriÃ§Ã£o 3
 		for (int i = 0;i < N;i++) {
 			IloExpr r3(env);
 			for (int j = 0;j < N;j++) {
